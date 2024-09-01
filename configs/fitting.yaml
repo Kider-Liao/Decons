@@ -1,0 +1,36 @@
+# Data preprocessing
+# 丢弃CPU利用率过低/过高的数据，这部分数据比较没有规律，容易扰乱拟合
+# 低于lower和高于higher的数据会被丢弃
+cpu_limits:
+  lower: 0.1
+  higher: 0.8
+# 一个微服务在整个profiling过程中的最大CPU利用率至少要达到的数值
+# 以下面为例，如果某个ms在profiling过程中不管workload怎么变化，它cpu利用率都没有
+# 到达过60%，我们认为这个ms没有被很好地profiling，所以不会用分段线性去刻画他
+# 会用一个线性函数去拟合。（类似昨天说的斜率很小，只有bias的那种情况）
+# ！！根据你实际的cpu利用率来改
+min_of_max_cpu: 0.6
+# 有的时候实际throughput和预设throughput误差很大，那种时候很可能是整个服务崩了
+# 采到的数据也就没啥用。所以通过比较实际throughput和预设throughput来判断这种情况
+# 以下表示能够接受30%以内的throughput误差
+acceptable_throughtput_error_rate: 0.4
+# throughput的间隔，比如你的throughput是[2, 4, 6, 8, 10]，那间隔就是2
+# ！！这个要根据你昨天profiling的配置来改
+throughput_classification_precision:
+  ComposePost: 10
+# Data training
+# 多少的数据用于训练，剩余的数据用于测试，但这里好像逻辑改过了，实际是用所有的数据训练
+# 再用所有的数据测试，留着别动吧
+percentage_for_train: 1
+# 进行分段线性拟合的时候能接受的最小准确率是多少，这里设置了70%
+# 到达阈值前会不断迭代。
+cutoff_fitting_accy_threshold: 0.7
+# 分段函数在哪里分段的查找范围，从min到max，每隔step就尝试一次。
+# 比如下面就会在[13, 26, 39 ... 247]这些点上面分段，然后尝试拟合分段线性。
+# ！！step最好和throughput_classification_precision里面设置一样
+cutoff_range:
+  # ！！"Search"要改成你实际测试的service名字
+  ComposePost:
+    min: 50
+    max: 150
+    step: 10

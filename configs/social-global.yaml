@@ -1,0 +1,36 @@
+data_path: journal/data_social-network
+test_path: journal/test_social-network
+figure_path: journal/test_social-network/figures
+yaml_repo_path: yamlRepository/socialNetwork
+namespace: social
+app_img: deathstarbench/social-network-microservices
+nodes_for_test:
+- node3
+prometheus_host: http://localhost:30091
+nodes_for_infra:
+- node4
+
+pod_spec:
+  cpu_size: 0.1
+  mem_size: 200Mi
+replicas:
+  ComposePost:
+    nginx-thrift: 60
+    compose-post-service: 15
+    text-service: 8
+    social-graph-service: 18
+    url-shorten-service: 4
+    user-mention-service: 18
+    home-timeline-service: 4
+    user-timeline-service: 3
+    post-storage-service: 18
+    user-service: 9
+    unique-id-service: 9
+    media-service: 9
+  UserTimeline:
+    nginx-thrift: 60
+    user-timeline-service: 10
+    post-storage-service: 6
+  HomeTimeline:
+    nginx-thrift: 30
+    post-storage-service: 3

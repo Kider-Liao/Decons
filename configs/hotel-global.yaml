@@ -1,0 +1,33 @@
+data_path: journal/data_hotel-reserv
+figure_path: journal/data_hotel-reserv/figures
+yaml_repo_path: yamlRepository/hotelReservation
+namespace: hotel-reserv
+# app_img: nicklin9907/erms:hotelreservation-1.0
+app_img: igorrudyk1/hotelreservation:latest
+nodes_for_test:
+- slave9
+- slave15
+- slave17
+
+prometheus_host: http://localhost:30091
+# stateful service
+nodes_for_infra:
+- slave9
+- slave15
+- slave17
+pod_spec:
+  cpu_size: 0.1
+  mem_size: 200Mi
+
+replicas:
+  Search:
+    frontend: 14
+    reservation: 10
+    search: 10
+    rate: 6
+    profile: 6
+    geo: 6
+  Recommendation:
+    frontend: 8
+    profile: 5
+    recommendation: 2

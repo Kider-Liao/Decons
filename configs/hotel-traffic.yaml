@@ -1,0 +1,12 @@
+replicas:
+  Search:
+    frontend: 14
+    reservation: 10
+    search: 10
+    rate: 6
+    profile: 6
+    geo: 6
+  Recommendation:
+    frontend: 8
+    profile: 5
+    recommendation: 2
