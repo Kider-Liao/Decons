@@ -1,0 +1,56 @@
+repeats: [0]
+duration: 40
+services: 
+- Search
+# - Recommendation
+# - Login
+# - Reservation
+interference_config:
+  cpu:
+    cpu_size: 0.4
+    mem_size: 10Mi
+    pod_range: [1]
+  # capacity:
+  #   cpu_size: 0.01
+  #   mem_size: 4Gi
+  #   pod_range: [7, 10]
+  # bandwidth:
+  #   cpu_size: 1
+  #   mem_size: 100Mi
+  #   pod_range: [9, 18]
+workload_config:
+  wrk_path: wrk2/wrk
+  services:
+    Reservation:
+      max_clients: 20
+      thread_num: 1
+      connection_num: 1
+      throughput: 1
+      script_path: wrk2/scripts/hotel-reservation/reserve.lua
+      url: http://localhost:30096
+    Recommendation:
+      max_clients: 20
+      thread_num: 7
+      connection_num: 14
+      throughput: 28
+      script_path: wrk2/scripts/hotel-reservation/recommendation.lua
+      url: http://localhost:30096
+    Search:
+      max_clients: 20
+      thread_num: 1
+      connection_num: 1
+      throughput: 4
+      script_path: wrk2/scripts/hotel-reservation/search.lua
+      url: http://localhost:30096
+    Login:
+      max_clients: 20
+      thread_num: 2
+      connection_num: 4
+      throughput: 8
+      script_path: wrk2/scripts/hotel-reservation/login.lua
+      url: http://localhost:30096
+collector_config:
+  jaeger_host: http://localhost:30095
+  entry_point: frontend
+  max_traces: 1000
+  monitor_interval: 1
